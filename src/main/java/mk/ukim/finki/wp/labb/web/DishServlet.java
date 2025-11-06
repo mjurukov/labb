@@ -29,28 +29,24 @@ public class DishServlet extends HttpServlet {
     }
 
     @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String chefId = request.getParameter("chefId");
+        response.sendRedirect("/dish?chefId=" + chefId);
+    }
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         IWebExchange webExchange = JakartaServletWebApplication
                 .buildApplication(getServletContext())
                 .buildExchange(request, response);
         WebContext context = new WebContext(webExchange);
-            Long chefId = -1L;
-            chefId = Long.parseLong(request.getParameter("chefId"));
 
-
+        Long chefId = Long.parseLong(request.getParameter("chefId"));
         Chef chef = chefService.findById(chefId);
 
-
         context.setVariable("dishes", dishService.listDishes());
-        context.setVariable("chefId", chefId);
-        context.setVariable("chefName", chef.getFirstName() + " " + chef.getLastName());
+        context.setVariable("chef", chef);
 
         springTemplateEngine.process("dishesList.html", context, response.getWriter());
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String chefId = request.getParameter("chefId");
-        response.sendRedirect("/dish?chefId=" + chefId);
     }
 }

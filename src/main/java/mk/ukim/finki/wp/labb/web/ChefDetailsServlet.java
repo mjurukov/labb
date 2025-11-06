@@ -37,23 +37,22 @@ public class ChefDetailsServlet extends HttpServlet {
         Long chefId = Long.parseLong(req.getParameter("chefId"));
         Chef chef = chefService.findById(chefId);
 
-        context.setVariable("chefName", chef.getFirstName() + " " + chef.getLastName());
-        context.setVariable("chefBio", chef.getBio());
+        context.setVariable("chefInfo", chef);
         context.setVariable("dishes", chef.getDishes());
+        context.setVariable("chefId", chef.getId());
 
         springTemplateEngine.process("chefDetails.html", context, resp.getWriter());
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(req, resp);
-        WebContext context = new WebContext(webExchange);
-        Long chefId = -1L;
-        chefId = Long.parseLong(req.getParameter("chefId"));
+        Long chefId = Long.parseLong(req.getParameter("chefId"));
         String dishId = req.getParameter("dishId");
 
-        Dish dish = dishService.findByDishId(dishId);
-        Chef chef = chefService.addDishToChef(chefId, dish.getDishId());
-        resp.sendRedirect("/chefDetails?chefId=" + chef.getId());
+        if (dishId != null) {
+            chefService.addDishToChef(chefId, dishId);
+        }
+
+        resp.sendRedirect("/chefDetails?chefId=" + chefId);
     }
 }
