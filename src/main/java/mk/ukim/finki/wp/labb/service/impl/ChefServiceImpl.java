@@ -28,7 +28,7 @@ public class ChefServiceImpl implements ChefService {
 
     @Override
     public Chef findById(Long id) {
-        return chefRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return chefRepository.findById(id).orElseThrow();
     }
 
     @Override
