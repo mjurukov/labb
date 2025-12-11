@@ -53,6 +53,13 @@
                                placeholder="Enter time in minutes">
                     </div>
 
+                    <select id="chefId" name="chefId" class="form-control" required>
+                        <option th:each="chef : ${chefs}"
+                                th:value="${chef.id}"
+                                th:text="${chef.firstName + ' ' + chef.lastName}">
+                        </option>
+                    </select>
+
                     <button id="submit" type="submit">Submit</button>
                     <a type="button" href="/dishes">Back</a>
                 </form>

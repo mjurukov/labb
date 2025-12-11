@@ -1,6 +1,8 @@
 package mk.ukim.finki.wp.labb.service.impl;
 
+import mk.ukim.finki.wp.labb.model.Chef;
 import mk.ukim.finki.wp.labb.model.Dish;
+import mk.ukim.finki.wp.labb.repository.ChefRepository;
 import mk.ukim.finki.wp.labb.repository.DishRepository;
 import mk.ukim.finki.wp.labb.service.DishService;
 import org.springframework.stereotype.Service;
@@ -11,9 +13,11 @@ import java.util.List;
 public class DishServiceImpl implements DishService {
 
     private final DishRepository dishRepository;
+    private final ChefRepository chefRepository;
 
-    public DishServiceImpl(DishRepository dishRepository) {
+    public DishServiceImpl(DishRepository dishRepository, ChefRepository chefRepository) {
         this.dishRepository = dishRepository;
+        this.chefRepository = chefRepository;
     }
 
     @Override
@@ -32,18 +36,26 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public Dish create(String dishId, String name, String cuisine, int preparationTime) {
-        Dish dish =  new Dish(dishId, name, cuisine, preparationTime);
+    public Dish create(String dishId, String name, String cuisine, int preparationTime, Long chefId) {
+        Chef chef = chefRepository.findById(chefId).orElseThrow();
+        Dish dish = new Dish(dishId, name, cuisine, preparationTime);
+        dish.setChef(chef);
         return dishRepository.save(dish);
     }
 
     @Override
-    public Dish update(Long id, String dishId, String name, String cuisine, int preparationTime) {
+    public Dish update(Long id, String dishId, String name, String cuisine,
+                       int preparationTime, Long chefId) {
+
         Dish dish = findById(id);
         dish.setDishId(dishId);
         dish.setName(name);
         dish.setCuisine(cuisine);
         dish.setPreparationTime(preparationTime);
+
+        Chef chef = chefRepository.findById(chefId).orElseThrow();
+        dish.setChef(chef);
+
         return dishRepository.save(dish);
     }
 
