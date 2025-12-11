@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>List Dishes</title>
@@ -9,10 +9,11 @@
 
 <table>
     <tr>
-        <th>ID</th>
+        <th>Dish ID</th>
         <th>Name</th>
         <th>Cuisine</th>
         <th>Time</th>
+        <th>Chef</th>
         <th>Actions</th>
     </tr>
 
@@ -23,7 +24,7 @@
         <td th:text="${dish.name}"></td>
         <td th:text="${dish.cuisine}"></td>
         <td th:text="${dish.preparationTime}"></td>
-
+        <td th:text="${dish.chef?.firstName + ' ' + dish.chef?.lastName}"></td>
         <td>
             <a th:href="@{'/dishes/dish-form/' + ${dish.id}}">Edit</a>
             <a th:href="@{'/dishes/delete/' + ${dish.id}}">Delete</a>

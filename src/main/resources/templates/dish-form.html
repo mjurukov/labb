@@ -1,66 +1,55 @@
-<div xmlns:th="http://www.thymeleaf.org">
-    <section class="jumbotron text-center">
-        <div class="container">
-            <h1 class="jumbotron-heading">Dish Form</h1>
-        </div>
-    </section>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dish Form</title>
+</head>
+<body>
+<h1 th:text="${dish.id == null} ? 'Add New Dish' : 'Edit Dish'"></h1>
 
-                <form method="post"
-                      th:action="@{${dish == null ? '/dishes/add' : '/dishes/edit/' + dish.id}}">
-                    <div class="form-group">
-                        <label for="dishId">Dish ID</label>
-                        <input type="text"
-                               class="form-control"
-                               id="dishId"
-                               name="dishId"
-                               th:value="${dish != null ? dish.dishId : ''}"
-                               required
-                               placeholder="Enter dish ID">
-                    </div>
+<div th:if="${error}" style="color:red" th:text="${error}"></div>
 
-                    <input type="hidden" name="id" th:value="${dish?.id}" />
+<form method="post">
+    <div th:if="${dish.id != null}">
+        <input type="hidden" name="id" th:value="${dish.id}"/>
+    </div>
 
-                    <div class="form-group">
-                        <label for="name">Dish Name</label>
-                        <input type="text"
-                               class="form-control"
-                               id="name"
-                               name="name"
-                               th:value="${dish != null ? dish.name : ''}"
-                               required
-                               placeholder="Enter dish name">
-                    </div>
+    <div>
+        <label for="dishId">Dish ID</label>
+        <input type="text" id="dishId" name="dishId" th:value="${dish.dishId}" required>
+    </div>
 
-                    <div class="form-group">
-                        <label for="cuisine">Cuisine</label>
-                        <input type="text"
-                               class="form-control"
-                               id="cuisine"
-                               name="cuisine"
-                               th:value="${dish != null ? dish.cuisine : ''}"
-                               required
-                               placeholder="Enter cuisine">
-                    </div>
+    <div>
+        <label for="name">Dish Name</label>
+        <input type="text" id="name" name="name" th:value="${dish.name}" required>
+    </div>
 
-                    <div class="form-group">
-                        <label for="prepTime">Preparation Time</label>
-                        <input type="number"
-                               class="form-control"
-                               id="prepTime"
-                               name="preparationTime"
-                               th:value="${dish != null ? dish.preparationTime : ''}"
-                               required
-                               placeholder="Enter time in minutes">
-                    </div>
+    <div>
+        <label for="cuisine">Cuisine</label>
+        <input type="text" id="cuisine" name="cuisine" th:value="${dish.cuisine}" required>
+    </div>
 
-                    <select id="chefId" name="chefId" class="form-control" required>
-                        <option th:each="chef : ${chefs}"
-                                th:value="${chef.id}"
-                                th:text="${chef.firstName + ' ' + chef.lastName}">
-                        </option>
-                    </select>
+    <div>
+        <label for="preparationTime">Preparation Time</label>
+        <input type="number" id="preparationTime" name="preparationTime" th:value="${dish.preparationTime}" required>
+    </div>
 
-                    <button id="submit" type="submit">Submit</button>
-                    <a type="button" href="/dishes">Back</a>
-                </form>
-            </div>
+    <div>
+        <label for="chefId">Chef</label>
+        <select id="chefId" name="chefId" required>
+            <option value="">Select Chef</option>
+            <option th:each="chef : ${chefs}"
+                    th:value="${chef.id}"
+                    th:text="${chef.firstName + ' ' + chef.lastName}"
+                    th:selected="${dish.chef != null and dish.chef.id == chef.id}">
+            </option>
+        </select>
+    </div>
+
+    <button type="submit" th:formaction="${dish.id == null} ? @{/dishes/add} : @{/dishes/edit/{id}(id=${dish.id})}">
+        <span th:text="${dish.id == null} ? 'Create' : 'Update'"></span> Dish
+    </button>
+    <a href="/dishes">Back</a>
+</form>
+</body>
+</html>
