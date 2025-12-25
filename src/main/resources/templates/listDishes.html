@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>List Dishes</title>
@@ -26,8 +26,10 @@
         <td th:text="${dish.preparationTime}"></td>
         <td th:text="${dish.chef?.firstName + ' ' + dish.chef?.lastName}"></td>
         <td>
+            <div sec:authorize="hasRole('ADMIN')">
             <a th:href="@{'/dishes/dish-form/' + ${dish.id}}">Edit</a>
             <a th:href="@{'/dishes/delete/' + ${dish.id}}">Delete</a>
+            </div>
         </td>
     </tr>
 </table>
